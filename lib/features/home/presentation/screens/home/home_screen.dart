@@ -1,4 +1,4 @@
-import 'package:bankapp/features/accounts/data/models/account.dart';
+// import 'package:bankapp/features/accounts/data/models/account.dart';
 import 'package:bankapp/features/accounts/presentation/state/accounts_provider.dart';
 import 'package:bankapp/features/accounts/presentation/widgets/account_card.dart';
 import 'package:bankapp/features/home/presentation/widgets/custom_appbar.dart';
