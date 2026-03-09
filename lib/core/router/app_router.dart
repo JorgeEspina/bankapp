@@ -1,3 +1,4 @@
+import 'package:bankapp/features/configuration/presentation/screens/configuration_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:bankapp/features/authentication/presentation/screens/screens.dart';
 
@@ -15,6 +16,11 @@ final appRouter = GoRouter(
       path: '/home',
       name: HomeScreen.name,
       builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: '/configuration',
+      name: ConfigurationScreen.name,
+      builder: (context, state) => const ConfigurationScreen(),
     ),
   ],
 );

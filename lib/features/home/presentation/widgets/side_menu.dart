@@ -18,10 +18,10 @@ class _SideMenuState extends State<SideMenu> {
   Widget build(BuildContext context) {
     final hasNotch =
         MediaQuery.of(context).viewPadding.top >
-        35; // para cuando tenga la isla en ios
+        35;
 
     return NavigationDrawer(
-      backgroundColor: const Color(0xFF232533),
+      //backgroundColor: const Color(0xFF232533),
       selectedIndex: navDrawerIndex,
       onDestinationSelected: (value) {
         setState(() {

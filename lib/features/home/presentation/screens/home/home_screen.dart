@@ -43,7 +43,6 @@ class _HomeView extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Título
             Text(
               'Bienvenido Jorge',
               style: Theme.of(
@@ -51,7 +50,6 @@ class _HomeView extends ConsumerWidget {
               ).textTheme.headlineMedium?.copyWith(color: Colors.white),
             ),
             const SizedBox(height: 20),
-            // Slider de cuentas
             Text(
               'Cuentas',
               style: Theme.of(
@@ -76,7 +74,6 @@ class _HomeView extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
 
-            // === Nueva versión slider/carrusel ===
             Text(
               'Tarjetas de credito',
               style: Theme.of(
