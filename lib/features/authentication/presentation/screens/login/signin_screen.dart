@@ -1,70 +1,71 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class SignInScreen extends StatefulWidget {
-  static const name = 'signup-screen';
+class SignInScreen extends ConsumerStatefulWidget {
+  static const name = 'signin-screen';
 
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignUpScreenState();
+  ConsumerState<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignUpScreenState extends State<SignInScreen> {
-  bool _obscurePassword = true; // controla visibilidad de la contraseña
+class _SignInScreenState extends ConsumerState<SignInScreen> {
+
+  bool _obscurePassword = true;
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
+    // final authState = ref.watch(authProvider);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
             const Text(
-              'Sign Up',
+              'Sign In',
               style: TextStyle(
                 fontSize: 34,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
+
             const SizedBox(height: 20),
-            // Email
+
             TextField(
-              decoration: InputDecoration(
+              controller: emailController,
+              decoration: const InputDecoration(
                 labelText: 'Email Address',
-                prefixIcon: const Icon(
+                prefixIcon: Icon(
                   Icons.email_outlined,
                   color: Color(0xFFA2A2A7),
                 ),
-                filled: true,
-                fillColor: Colors.transparent, // fondo transparente
-                labelStyle: const TextStyle(color: Color(0xFFA2A2A7)),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xFFA2A2A7),
-                  ), // línea inferior gris
+                labelStyle: TextStyle(color: Color(0xFFA2A2A7)),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFFA2A2A7)),
                 ),
-                focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xFF232533),
-                    width: 2,
-                  ), // línea azul al enfocar
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 0,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF232533), width: 2),
                 ),
               ),
               style: const TextStyle(color: Colors.white),
               keyboardType: TextInputType.emailAddress,
             ),
+
             const SizedBox(height: 30),
-            // Password
+
             TextField(
+              controller: passwordController,
               obscureText: _obscurePassword,
               decoration: InputDecoration(
                 labelText: 'Password',
@@ -77,7 +78,7 @@ class _SignUpScreenState extends State<SignInScreen> {
                     _obscurePassword
                         ? Icons.visibility
                         : Icons.visibility_off_outlined,
-                    color: Color(0xFFA2A2A7),
+                    color: const Color(0xFFA2A2A7),
                   ),
                   onPressed: () {
                     setState(() {
@@ -85,8 +86,6 @@ class _SignUpScreenState extends State<SignInScreen> {
                     });
                   },
                 ),
-                filled: true,
-                fillColor: Colors.transparent,
                 labelStyle: const TextStyle(color: Color(0xFFA2A2A7)),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFFA2A2A7)),
@@ -97,43 +96,47 @@ class _SignUpScreenState extends State<SignInScreen> {
               ),
               style: const TextStyle(color: Colors.white),
             ),
+
             const SizedBox(height: 40),
+
             ElevatedButton(
               onPressed: () {
+
+                // ref.read(authProvider.notifier)
+                //    .login(emailController.text, passwordController.text);
+
                 context.go('/home');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0066FF),
-                foregroundColor: Colors.white,
                 minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
               ),
               child: const Text(
                 'Sign In',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
+
             const SizedBox(height: 20),
+
             RichText(
-              //textAlign: TextAlign.center,
               text: TextSpan(
                 text: "I'm a new user. ",
                 style: const TextStyle(color: Colors.white, fontSize: 14),
                 children: [
                   TextSpan(
-                    text: 'Sign In',
+                    text: 'Register',
                     style: const TextStyle(
                       color: Color(0xFF0066FF),
                       fontWeight: FontWeight.bold,
                     ),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => context.push('/home')
+                      ..onTap = () => context.push('/signup'),
                   ),
                 ],
               ),
             ),
+
           ],
         ),
       ),

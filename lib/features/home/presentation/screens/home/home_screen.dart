@@ -1,4 +1,5 @@
 import 'package:bankapp/features/accounts/data/models/account.dart';
+import 'package:bankapp/features/accounts/presentation/state/accounts_provider.dart';
 import 'package:bankapp/features/accounts/presentation/widgets/account_card.dart';
 import 'package:bankapp/features/home/presentation/widgets/custom_appbar.dart';
 import 'package:bankapp/features/home/presentation/widgets/side_menu.dart';
@@ -33,12 +34,8 @@ class _HomeView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Mock de cuentas
-    final accounts = [
-      Account(name: 'Corriente', number: '1234', balance: 1500.50),
-      Account(name: 'Ahorros', number: '5678', balance: 4200.00),
-      Account(name: 'Tarjeta Crédito', number: '9012', balance: 2250.75),
-    ];
+    
+    final accounts = ref.watch(accountsProvider);
 
     return SingleChildScrollView(
       child: Padding(

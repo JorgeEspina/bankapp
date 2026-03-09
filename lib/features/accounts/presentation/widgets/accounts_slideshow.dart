@@ -21,8 +21,8 @@ class AccountsSlideshow extends StatelessWidget {
       width: double.infinity,
       child: Swiper(
         viewportFraction: 0.85,
-        scale: 0.9,
-        autoplay: false, // opcional: true si quieres auto-scroll
+        scale: 0.9,  
+        autoplay: false,
         pagination: SwiperPagination(
           margin: const EdgeInsets.only(top: 0),
           builder: DotSwiperPaginationBuilder(
