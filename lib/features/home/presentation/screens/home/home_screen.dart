@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:bankapp/features/home/presentation/widgets/custom_bottom_navigation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// import 'package:bankapp/features/accounts/data/services/accounts_service.dart';
+
 class HomeScreen extends StatelessWidget {
   static const name = 'home-screen';
 
@@ -32,6 +34,15 @@ class HomeScreen extends StatelessWidget {
 class _HomeView extends ConsumerWidget {
   const _HomeView();
 
+  // Future<void> loadData() async {
+  //   final service = AccountsService();
+
+  //   final accounts = await service.getAccounts();
+
+  //   print("Mock Accounts:");
+  //   print(accounts);
+  // }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     
@@ -44,11 +55,18 @@ class _HomeView extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Bienvenido Jorge',
+              'Bienvenido',
               style: Theme.of(
                 context,
               ).textTheme.headlineMedium?.copyWith(color: Colors.white),
             ),
+            // const SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     loadData();
+            //   },
+            //   child: const Text("Probar API Mock"),
+            // ),
             const SizedBox(height: 20),
             Text(
               'Cuentas',
