@@ -80,7 +80,7 @@ class SuccessfulPage extends StatelessWidget {
               height: 50,
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Color(0xFF006FFD)),
+                  backgroundColor: WidgetStateProperty.all(Color(0xFF006FFD)),
                 ),
                 onPressed: () {
                   _showReceiptBottomSheet(context, provider);
@@ -253,7 +253,7 @@ class SuccessfulPage extends StatelessWidget {
                               ),
                               SizedBox(height: 4),
                               Text(
-                                "\Q0.00",
+                                "Q0.00",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,

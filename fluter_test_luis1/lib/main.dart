@@ -1,29 +1,72 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'core/routes/app_routes.dart';
-import 'package:provider/provider.dart'; 
-import 'package:fluter_test_luis1/features/recharge/presentation/state/recharge_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluter_test_luis1/app_colors.dart';
+import 'package:fluter_test_luis1/core/dependencies.dart';
+import 'package:fluter_test_luis1/core/environment/env.dart';
+import 'package:fluter_test_luis1/core/local_storage.dart';
+import 'package:fluter_test_luis1/core/navigation/router.dart';
+import 'package:fluter_test_luis1/core/utils/my_bloc_observer.dart';
+import 'package:fluter_test_luis1/l10n/app_localizations.dart';
 
-void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => RechargeProvider(),
-      child: const MyApp(),
-    ),
-  );
+void runProject() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Env.initialize();
+  await LocalStorage().init();
+  await setupDependencies();
+  Bloc.observer = MyBlocObserver(); 
+  runApp(ProviderScope(child: const MainApp()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: AppRoutes.recharge,
-      routes: AppRoutes.routes,
-      debugShowCheckedModeBanner: false,
+    return MaterialApp.router(
+      theme: ThemeData(primaryColor: AppColors.primaryColor),
+      title: Env.appName,
+      supportedLocales: [const Locale('en', 'US'), const Locale('es', 'ES')],
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      routerConfig: router,
     );
   }
 }
+
+// Comentado 23-04-2026 para probar la clase al día 
+
+// import 'package:flutter/material.dart';
+// import 'core/routes/app_routes.dart';
+// import 'package:provider/provider.dart'; 
+// import 'package:fluter_test_luis1/features/recharge/presentation/state/recharge_provider.dart';
+
+// void main() {
+//   runApp(
+//     ChangeNotifierProvider(
+//       create: (_) => RechargeProvider(),
+//       child: const MyApp(),
+//     ),
+//   );
+// }
+
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       initialRoute: AppRoutes.recharge,
+//       routes: AppRoutes.routes,
+//       debugShowCheckedModeBanner: false,
+//     );
+//   }
+// }
 
 
 

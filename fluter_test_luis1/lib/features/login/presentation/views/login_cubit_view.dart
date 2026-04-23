@@ -1,14 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:fluter_test_luis1/core/assets.dart';
-import 'package:fluter_test_luis1/features/login/presentation/state/login_provider.dart';
+import 'package:fluter_test_luis1/features/login/presentation/state/login_cubit.dart';
 import 'package:fluter_test_luis1/features/login/presentation/widgets/social_widget.dart';
 import 'package:fluter_test_luis1/l10n/app_localizations.dart';
 
-class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+class LoginCubitView extends StatelessWidget {
+  const LoginCubitView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +132,7 @@ class _BodyWidgetState extends State<BodyWidget> {
                   final email = emailController.text;
                   final password = passwordController.text;
 
-                  final logged = await context.read<LoginProvider>().login(
+                  final logged = await context.read<LoginCubit>().login(
                     email,
                     password,
                   );
@@ -265,11 +265,10 @@ class HeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final title = Provider.of<LoginProvider>(context).title;
-    final state = context
-        .watch<LoginProvider>(); // Leer valores y actualizar UI
+    final cubit = context.watch<LoginCubit>(); // Leer valores y actualizar UI
 
-    final title = state.title;
-    final logged = state.logged;
+    final title = cubit.state.title;
+    final logged = cubit.state.logged;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (logged) {
         // Navegar a otra pantalla
@@ -284,32 +283,6 @@ class HeaderWidget extends StatelessWidget {
         color: Colors.black,
         fontWeight: FontWeight.bold,
       ),
-    );
-  }
-}
-
-class LoginButton extends StatelessWidget {
-  const LoginButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    MediaQuery.of(context).size.width;
-    Theme.of(context).primaryColor;
-
-    return ElevatedButton(
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all(Color(0xFF006FFD)),
-      ),
-      onPressed: () {
-        /* Provider.of<LoginProvider>(
-          context,
-          listen: false,
-        ).updateTitle('Haciendo login...');*/
-        context.read<LoginProvider>().updateTitle(
-          'Haciendo login...',
-        ); // Solo leer valores para ejecutar funciones
-      },
-      child: Text('Login', style: TextStyle(color: Colors.white)),
     );
   }
 }

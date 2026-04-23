@@ -1,14 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:fluter_test_luis1/core/assets.dart';
-import 'package:fluter_test_luis1/features/login/presentation/state/login_provider.dart';
+import 'package:fluter_test_luis1/features/login/presentation/state/login_notifier.dart';
 import 'package:fluter_test_luis1/features/login/presentation/widgets/social_widget.dart';
 import 'package:fluter_test_luis1/l10n/app_localizations.dart';
 
-class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+class LoginRiverpodView extends StatelessWidget {
+  const LoginRiverpodView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +21,18 @@ class LoginView extends StatelessWidget {
   }
 }
 
-class BodyWidget extends StatefulWidget {
+// Cambiar a ConsumerStatefulWidget para usar Riverpod
+// StatefulWidget -> ConsumerStatefulWidget
+// StatelessWidget -> ConsumerWidget
+
+class BodyWidget extends ConsumerStatefulWidget {
   const BodyWidget({super.key});
 
   @override
-  State<BodyWidget> createState() => _BodyWidgetState();
+  ConsumerState<BodyWidget> createState() => _BodyWidgetState();
 }
 
-class _BodyWidgetState extends State<BodyWidget> {
+class _BodyWidgetState extends ConsumerState<BodyWidget> {
   late bool showPassword;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -132,14 +136,13 @@ class _BodyWidgetState extends State<BodyWidget> {
                   final email = emailController.text;
                   final password = passwordController.text;
 
-                  final logged = await context.read<LoginProvider>().login(
-                    email,
-                    password,
-                  );
+                  ref
+                      .read(loginRiverpodProvider.notifier)
+                      .login(email, password);
 
-                  if (logged) {
+                  /* if (logged) {
                     //  context.go('/dashboard');
-                  }
+                  }*/
 
                   // Solo leer valores para ejecutar funciones
                 },
@@ -259,14 +262,16 @@ class MovementsWidget extends StatelessWidget {
   }
 }
 
-class HeaderWidget extends StatelessWidget {
+class HeaderWidget extends ConsumerWidget {
   const HeaderWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     //final title = Provider.of<LoginProvider>(context).title;
-    final state = context
-        .watch<LoginProvider>(); // Leer valores y actualizar UI
+
+    final state = ref.watch(
+      loginRiverpodProvider,
+    ); // Leer valores y actualizar UI
 
     final title = state.title;
     final logged = state.logged;
@@ -278,38 +283,12 @@ class HeaderWidget extends StatelessWidget {
     });
 
     return Text(
-      title,
+      'Riverpod $title',
       style: TextStyle(
         fontSize: 24,
         color: Colors.black,
         fontWeight: FontWeight.bold,
       ),
-    );
-  }
-}
-
-class LoginButton extends StatelessWidget {
-  const LoginButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    MediaQuery.of(context).size.width;
-    Theme.of(context).primaryColor;
-
-    return ElevatedButton(
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all(Color(0xFF006FFD)),
-      ),
-      onPressed: () {
-        /* Provider.of<LoginProvider>(
-          context,
-          listen: false,
-        ).updateTitle('Haciendo login...');*/
-        context.read<LoginProvider>().updateTitle(
-          'Haciendo login...',
-        ); // Solo leer valores para ejecutar funciones
-      },
-      child: Text('Login', style: TextStyle(color: Colors.white)),
     );
   }
 }

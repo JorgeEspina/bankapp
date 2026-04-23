@@ -145,7 +145,7 @@ class _RechargePageState extends State<RechargePage> {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xFF006FFD))),
+                style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Color(0xFF006FFD))),
                 onPressed: () {
                   if (_phoneController.text.isEmpty) {
                     _showError("Ingrese un número");

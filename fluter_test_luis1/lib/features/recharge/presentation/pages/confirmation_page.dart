@@ -157,7 +157,7 @@ class ConfirmationPage extends StatelessWidget {
               child: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all(Color(0xFF006FFD)),
+                      WidgetStateProperty.all(Color(0xFF006FFD)),
                 ),
                 onPressed: () {
                   Navigator.push(
