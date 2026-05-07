@@ -13,11 +13,11 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final config = ref.watch(configurationProvider);
+    final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
-      routerConfig: appRouter,
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
       theme: AppTheme(isDarkMode: config.isDarkMode).getTheme(),
     );
