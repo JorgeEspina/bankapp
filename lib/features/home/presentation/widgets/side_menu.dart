@@ -1,6 +1,7 @@
-import 'package:bankapp/features/home/presentation/widgets/home_drawer.dart';
+import 'package:bankapp/core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../config/menu/home_menu_items.dart';
 
 class SideMenu extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -16,19 +17,18 @@ class _SideMenuState extends State<SideMenu> {
 
   @override
   Widget build(BuildContext context) {
-    final hasNotch =
-        MediaQuery.of(context).viewPadding.top >
-        35;
+    final l10n = AppLocalizations.of(context);
+    final menuItems = getHomeMenuItems();
+    final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
 
     return NavigationDrawer(
-      //backgroundColor: const Color(0xFF232533),
       selectedIndex: navDrawerIndex,
       onDestinationSelected: (value) {
         setState(() {
           navDrawerIndex = value;
         });
 
-        final menuItem = homeMenuItems[value];
+        final menuItem = menuItems[value];
 
         if (menuItem.link != null) {
           context.push(menuItem.link!);
@@ -50,39 +50,12 @@ class _SideMenuState extends State<SideMenu> {
           ),
         ),
 
-        ...homeMenuItems
-            .sublist(0, 5)
-            .map(
-              (item) => NavigationDrawerDestination(
-                icon: Icon(item.icon),
-                label: Text(item.title),
-              ),
-            ),
-
-        const Padding(
-          padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
-          child: Divider(),
-        ),
-
-        const Padding(
-          padding: EdgeInsets.fromLTRB(28, 10, 16, 10),
-          child: Text(
-            'More options',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+        ...menuItems.map(
+          (item) => NavigationDrawerDestination(
+            icon: Icon(item.icon),
+            label: Text(item.getTitle(l10n)),
           ),
         ),
-
-        ...homeMenuItems
-            .sublist(5)
-            .map(
-              (item) => NavigationDrawerDestination(
-                icon: Icon(item.icon),
-                label: Text(item.title),
-              ),
-            ),
       ],
     );
   }

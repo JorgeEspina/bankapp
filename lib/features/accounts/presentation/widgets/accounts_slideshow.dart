@@ -1,11 +1,11 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:bankapp/features/accounts/data/models/account.dart';
+import 'package:bankapp/features/accounts/domain/entities/account_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:bankapp/features/accounts/presentation/widgets/account_card.dart';
 
 class AccountsSlideshow extends StatelessWidget {
-  final List<Account> accounts;
+  final List<AccountEntity> accounts;
 
   const AccountsSlideshow({
     super.key,
@@ -38,7 +38,7 @@ class AccountsSlideshow extends StatelessWidget {
 }
 
 class _Slide extends StatelessWidget {
-  final Account account;
+  final AccountEntity account;
 
   const _Slide({super.key, required this.account});
 

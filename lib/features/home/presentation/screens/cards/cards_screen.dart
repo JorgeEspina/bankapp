@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:bankapp/core/l10n/app_localizations.dart';
 import 'package:bankapp/features/accounts/data/services/accounts_service.dart';
 
 class CardsScreen extends StatelessWidget {
@@ -10,16 +10,14 @@ class CardsScreen extends StatelessWidget {
 
   Future<void> loadData() async {
     final service = AccountsService();
-
     final accounts = await service.getAccounts();
-
     print("Mock Accounts:");
     print(accounts);
   }
 
-  // Consumo de HTTP
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +25,7 @@ class CardsScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/home'),
         ),
-        title: const Text("Tarjetas de Crédito"),
+        title: Text(l10n.creditCards),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -35,7 +33,7 @@ class CardsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Consumo de Cliente HTTP',
+              l10n.httpConsumption,
               style: Theme.of(context)
                   .textTheme
                   .headlineSmall
@@ -46,7 +44,7 @@ class CardsScreen extends StatelessWidget {
               onPressed: () {
                 loadData();
               },
-              child: const Text("Probar API Mock"),
+              child: Text(l10n.testMockApi),
             ),
           ],
         ),

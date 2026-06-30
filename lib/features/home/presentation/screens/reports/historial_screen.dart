@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:bankapp/core/l10n/app_localizations.dart';
 
 class HistorialScreen extends StatelessWidget {
   static const name = 'history-screen';
   const HistorialScreen({super.key});
 
-  // Lista simulada de transacciones del día
   final List<Map<String, dynamic>> transactions = const [
     {
       "name": "Envio de Transferencia por pago de Netflix",
@@ -33,7 +33,6 @@ class HistorialScreen extends StatelessWidget {
     },
   ];
 
-  // Lista simulada de transacciones del día de auer
   final List<Map<String, dynamic>> transactionsYes = const [
     {
       "name": "Pago de Linea de Télefono",
@@ -57,24 +56,26 @@ class HistorialScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final today = DateTime.now();
     final formattedDate = "${today.day}/${today.month}/${today.year}";
     final formattedDateYes = "${today.day - 1}/${today.month}/${today.year}";
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/home'),
         ),
-        title: const Text("Historial"),
+        title: Text(l10n.history),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child : Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Transacciones de hoy: $formattedDate',
+              '${l10n.todayTransactions}: $formattedDate',
               style: Theme.of(context)
                   .textTheme
                   .headlineSmall
@@ -112,7 +113,7 @@ class HistorialScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'Transacciones de Ayer: $formattedDateYes',
+              '${l10n.yesterdayTransactions}: $formattedDateYes',
               style: Theme.of(context)
                   .textTheme
                   .headlineSmall
@@ -149,8 +150,8 @@ class HistorialScreen extends StatelessWidget {
               ),
             ),
           ],
-        )
-      )
+        ),
+      ),
     );
   }
 }

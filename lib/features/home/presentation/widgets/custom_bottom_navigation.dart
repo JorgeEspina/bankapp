@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:bankapp/core/l10n/app_localizations.dart';
 import '../../config/menu/home_menu_items.dart';
 
 class CustomBottomNavigation extends StatelessWidget {
@@ -7,29 +8,26 @@ class CustomBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    final l10n = AppLocalizations.of(context);
+    final menuItems = getHomeMenuItems();
     final location = GoRouter.of(context).location;
 
-    final currentIndex = homeMenuItems.indexWhere(
+    final currentIndex = menuItems.indexWhere(
       (item) => item.link == location,
     );
 
     return BottomNavigationBar(
-      //backgroundColor: const Color(0xFF232533),
       currentIndex: currentIndex < 0 ? 0 : currentIndex,
-
-      items: homeMenuItems
+      items: menuItems
           .map(
             (item) => BottomNavigationBarItem(
               icon: Icon(item.icon),
-              label: item.title,
+              label: item.getTitle(l10n),
             ),
           )
           .toList(),
-
       onTap: (index) {
-        final link = homeMenuItems[index].link;
-
+        final link = menuItems[index].link;
         if (link != null) {
           context.go(link);
         }

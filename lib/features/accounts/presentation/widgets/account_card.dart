@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:bankapp/features/home/config/menu/home_menu_items.dart';
-import 'package:bankapp/features/accounts/data/models/account.dart';
+import 'package:bankapp/features/accounts/domain/entities/account_entity.dart';
 import 'package:go_router/go_router.dart';
 
 class AccountCard extends StatelessWidget {
-  final Account account;
+  final AccountEntity account;
 
   const AccountCard({super.key, required this.account});
 
   @override
   Widget build(BuildContext context) {
+    final actions = getAccountActions();
+
     return Container(
       width: 250,
       decoration: BoxDecoration(
@@ -49,7 +51,7 @@ class AccountCard extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: accountActions.map((action) {
+            children: actions.map((action) {
               return IconButton(
                 icon: Icon(action.icon, color: const Color(0xFF0066FF)),
                 onPressed: () {

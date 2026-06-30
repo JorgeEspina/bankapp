@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:bankapp/core/l10n/app_localizations.dart';
 
 class TransferenciasScreen extends StatelessWidget {
   static const name = 'transfers-screen';
@@ -36,6 +37,7 @@ class TransferenciasScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -43,7 +45,7 @@ class TransferenciasScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/home'),
         ),
-        title: const Text("Transferencias"),
+        title: Text(l10n.transfers),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -51,7 +53,7 @@ class TransferenciasScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Transacciones de hoy',
+              l10n.todayTransactions,
               style: Theme.of(context)
                   .textTheme
                   .headlineSmall

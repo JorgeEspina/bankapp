@@ -1,20 +1,13 @@
+// Re-export del nuevo patrón para mantener compatibilidad
+export 'accounts_providers.dart';
+export 'accounts_state.dart';
+export 'accounts_controller.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/models/account.dart';
-import '../../data/services/accounts_service.dart';
+import '../../domain/entities/account_entity.dart';
+import 'accounts_providers.dart';
 
-final AccountsService _service = AccountsService();
-
-final accountsProvider = Provider<List<Account>>((ref) {
-  return [
-    Account(name: 'Corriente', number: '1234', balance: 1500.50),
-    Account(name: 'Ahorros', number: '5678', balance: 4200.00),
-    Account(name: 'Tarjeta Crédito', number: '9012', balance: 2250.75),
-  ];
+final accountsProvider = Provider<List<AccountEntity>>((ref) {
+  final state = ref.watch(accountsControllerProvider);
+  return state.accounts;
 });
-
-Future<void> loadAccounts() async {
-
-  final data = await _service.getAccounts();
-
-  print("Mock Accounts: $data");
-}

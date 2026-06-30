@@ -1,4 +1,5 @@
 import 'package:bankapp/features/configuration/presentation/screens/configuration_screen.dart';
+import 'package:bankapp/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:bankapp/features/home/presentation/screens/cards/cards_screen.dart';
 import 'package:bankapp/features/home/presentation/screens/reports/historial_screen.dart';
 import 'package:bankapp/features/home/presentation/screens/transfers/transferencias_screen.dart';
@@ -61,6 +62,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/cards',
         name: CardsScreen.name,
         builder: (context, state) => const CardsScreen(),
+      ),
+      GoRoute(
+        path: '/dashboard',
+        name: DashboardScreen.name,
+        builder: (context, state) => const DashboardScreen(),
       ),
     ],
   );
