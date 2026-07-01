@@ -4,9 +4,11 @@ Desarrollados
 - Login
 - Dashboard
 - Configuration
-- Tranferir
+- Transferir
 - Historial
 - Cliente HTTP y manejo de errores
+- Dashboard con datos mock
+- Estados de carga y error
+- Cache local
 
-
-Video: https://youtube.com/shorts/aPvB2--d_dw?si=fd5kD7C8k2VEl9ZG
+Puedes ver nuestras decisiones técnicas en el archivo de [Decisiones Técnicas](DECISIONTECNICA.md).
