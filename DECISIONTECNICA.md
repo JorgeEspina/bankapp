@@ -2,13 +2,13 @@
 Decisiones Técnicas - BankApp - Jorge David Espina Molina
 
 ¿Por qué Flutter Riverpod y no Bloc?
-Elegimos Riverpod porque el equipo ya lo manejaba en el proyecto experience_app. Además, con Riverpod podemos tener providers sin necesidad de un BuildContext, lo que simplifica mucho cuando queremos acceder al estado desde cualquier parte. Bloc es bueno pero añade más boilerplate (events, states, bloc class) para cosas que con un Notifier se resuelven en menos líneas.
+Elegimos Riverpod porque podemos tener providers sin necesidad de un BuildContext, lo que simplifica mucho cuando queremos acceder al estado desde cualquier parte. Bloc es bueno pero añade más (events, states, bloc class) para cosas que con un Notifier se resuelven en menos líneas.
 
 ¿Por qué separamos en features?
 La idea es que si mañana entra un compañero nuevo al equipo, pueda trabajar en el módulo de transfers sin necesidad de entender cómo funciona authentication. Cada feature tiene su propia carpeta con data, domain y presentation. Si alguien rompe algo en dashboard, no afecta al login.
 
 ¿Por qué Clean Architecture (data/domain/presentation)?
-Nos permite cambiar la fuente de datos sin tocar la UI. Hoy los productos del dashboard son datos mock, pero cuando el backend esté listo solo hay que cambiar el datasource remoto. La pantalla ni se entera porque consume una entidad del domain, no un modelo del API.
+Nos permite cambiar la fuente de datos sin tocar la UI. Hoy los productos del dashboard son datos mock, pero cuando el backend esté listo solo hay que cambiar el datasource remoto. La vista ni se entera porque consume una entidad del domain, no un modelo del API.
 
 ¿Por qué GoRouter?
 Lo elegimos porque necesitábamos controlar la navegación con guards (si el usuario no está logueado, redirigir al login). GoRouter nos da eso de forma declarativa y además soporta deep linking si a futuro lo necesitamos para notificaciones push.
@@ -21,9 +21,9 @@ Es la solución oficial de Flutter. Los archivos .arb son JSON que cualquier per
 
 ¿Por qué el state se divide en 3 archivos (providers, state, controller)?
 Porque así cada archivo tiene una sola responsabilidad:
-providers.dart define la inyección de dependencias (qué depende de qué)
-state.dart es solo la estructura de datos (qué información maneja la pantalla)
-controller.dart es la lógica (qué hacer cuando el usuario interactúa)
+ - providers definimos la inyección de dependencias (qué depende de qué)
+ - state solo para la estructura de datos (qué información maneja la pantalla)
+ - controller lógica (qué hacer cuando el usuario interactúa)
 Si necesitas debuggear por qué un dato no llega, vas al provider. Si un campo está mal, vas al state. Si una acción no funciona, vas al controller.
 
 ¿Por qué el Model tiene toEntity() y fromEntity()?
