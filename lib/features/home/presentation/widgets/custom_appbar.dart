@@ -1,3 +1,4 @@
+import 'package:bankapp/features/authentication/presentation/state/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -38,8 +39,11 @@ class CustomAppbar extends ConsumerWidget {
               const Spacer(),
 
               IconButton(
-                onPressed: () {
-                  context.push('/');
+                onPressed: () async {
+                  await ref.read(authProvider.notifier).logout();
+                  if (context.mounted) {
+                    context.go('/');
+                  }
                 },
                 icon: Icon(Icons.logout_outlined, color: Color(0xFFA2A2A7)),
               ),

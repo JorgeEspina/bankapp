@@ -1,7 +1,7 @@
-import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/datasources/auth_local_datasource.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -9,27 +9,13 @@ import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import 'auth_state.dart';
 
-final dioProvider = Provider<Dio>((ref) {
-  return Dio();
-});
-
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
-  final dio = ref.watch(dioProvider);
-  return AuthRemoteDataSourceImpl(dio);
-});
-
-final authLocalDataSourceProvider = Provider<AuthLocalDataSource>((ref) {
-  return AuthLocalDataSourceImpl();
+  return AuthRemoteDataSourceImpl();
 });
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final remote = ref.watch(authRemoteDataSourceProvider);
-  final local = ref.watch(authLocalDataSourceProvider);
-
-  return AuthRepositoryImpl(
-    remoteDataSource: remote,
-    localDataSource: local,
-  );
+  return AuthRepositoryImpl(remoteDataSource: remote);
 });
 
 final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
@@ -67,38 +53,40 @@ class AuthNotifier extends StateNotifier<AuthState> {
     checkSession();
   }
 
-  Future<void> checkSession() async {
-    final isLogged = await repository.isLoggedIn();
+  void checkSession() {
+    final isLogged = repository.isLoggedIn();
 
     if (isLogged) {
-      state = const AuthState.initial();
+      final user = repository.getCurrentUser();
+      if (user != null) {
+        state = AuthState.authenticated(user);
+      } else {
+        state = const AuthState.unauthenticated();
+      }
     } else {
       state = const AuthState.unauthenticated();
     }
   }
 
   Future<void> login({
-    required String username,
+    required String email,
     required String password,
   }) async {
     try {
       state = const AuthState.loading();
 
       final user = await loginUseCase(
-        username: username,
+        email: email,
         password: password,
       );
 
-      print('Login exitoso');
-      print('Usuario: ${user.username}');
-      print('Token: ${user.accessToken}');
-
       state = AuthState.authenticated(user);
-    } on DioException catch (e) {
-      final message = e.response?.data['message'] ?? 'Error al iniciar sesión';
-      state = AuthState.error(message);
-    } catch (_) {
-      state = const AuthState.error('Ocurrió un error inesperado');
+    } on FirebaseAuthException catch (e) {
+      state = AuthState.error(_parseFirebaseError(e.code));
+    } on FirebaseException catch (e) {
+      state = AuthState.error(_parseFirebaseError(e.code));
+    } catch (e) {
+      state = AuthState.error('Error inesperado: $e');
     }
   }
 
@@ -107,7 +95,22 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = const AuthState.unauthenticated();
   }
 
-  Future<bool> isLoggedIn() async {
-    return repository.isLoggedIn();
+  String _parseFirebaseError(String code) {
+    switch (code) {
+      case 'user-not-found':
+        return 'No se encontró una cuenta con ese correo';
+      case 'wrong-password':
+        return 'Contraseña incorrecta';
+      case 'invalid-email':
+        return 'El correo electrónico no es válido';
+      case 'user-disabled':
+        return 'Esta cuenta ha sido deshabilitada';
+      case 'too-many-requests':
+        return 'Demasiados intentos. Intenta más tarde';
+      case 'invalid-credential':
+        return 'Credenciales inválidas';
+      default:
+        return 'Error de autenticación: $code';
+    }
   }
 }

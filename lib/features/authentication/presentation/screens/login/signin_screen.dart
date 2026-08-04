@@ -1,9 +1,9 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../state/auth_provider.dart';
+import '../../state/auth_state.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   static const name = 'signin-screen';
@@ -33,7 +33,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     ref.read(authProvider.notifier).login(
-          username: emailController.text.trim(),
+          email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
   }
@@ -42,12 +42,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
 
-    ref.listen(authProvider, (previous, next) {
-      next.whenOrNull(
-        authenticated: (user) {
-          context.go('/home');
-        },
-      );
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (next.status == AuthStatus.authenticated) {
+        context.go('/home');
+      }
     });
 
     return Scaffold(
@@ -72,7 +70,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               TextFormField(
                 controller: emailController,
                 decoration: const InputDecoration(
-                  labelText: 'Username',
+                  labelText: 'Email',
                   prefixIcon: Icon(
                     Icons.email_outlined,
                     color: Color(0xFFA2A2A7),
@@ -87,10 +85,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   errorStyle: TextStyle(color: Colors.redAccent),
                 ),
                 style: const TextStyle(color: Colors.white),
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'El usuario es obligatorio';
+                    return 'El correo es obligatorio';
+                  }
+                  if (!value.contains('@')) {
+                    return 'Ingresa un correo válido';
                   }
                   return null;
                 },
@@ -146,67 +147,38 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               const SizedBox(height: 40),
 
               ElevatedButton(
-                onPressed: authState.maybeWhen(
-                  loading: () => null,
-                  orElse: () => _login,
-                ),
+                onPressed:
+                    authState.status == AuthStatus.loading ? null : _login,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF0066FF),
                   minimumSize: const Size(double.infinity, 50),
                 ),
-                child: authState.maybeWhen(
-                  loading: () => const CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                  orElse: () => const Text(
-                    'Sign In',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                child: authState.status == AuthStatus.loading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text(
+                        'Sign In',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
 
               const SizedBox(height: 12),
 
-              authState.when(
-                initial: () => const SizedBox(),
-                loading: () => const Text(
-                  'Iniciando sesión...',
-                  style: TextStyle(color: Colors.white),
-                ),
-                authenticated: (user) => Text(
-                  'Login correcto: ${user.username}',
-                  style: const TextStyle(color: Colors.greenAccent),
-                ),
-                unauthenticated: () => const SizedBox(),
-                error: (message) => Text(
-                  'Error: $message',
+              if (authState.status == AuthStatus.error &&
+                  authState.errorMessage != null)
+                Text(
+                  authState.errorMessage!,
                   style: const TextStyle(color: Colors.redAccent),
                   textAlign: TextAlign.center,
                 ),
-              ),
 
-              const SizedBox(height: 20),
-
-              RichText(
-                text: TextSpan(
-                  text: "I'm a new user. ",
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
-                  children: [
-                    TextSpan(
-                      text: 'Register',
-                      style: const TextStyle(
-                        color: Color(0xFF0066FF),
-                        fontWeight: FontWeight.bold,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => context.push('/signup'),
-                    ),
-                  ],
+              if (authState.status == AuthStatus.loading)
+                const Text(
+                  'Iniciando sesión...',
+                  style: TextStyle(color: Colors.white),
                 ),
-              ),
             ],
           ),
         ),

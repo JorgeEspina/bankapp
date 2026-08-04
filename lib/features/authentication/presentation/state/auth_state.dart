@@ -1,17 +1,27 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/auth_user.dart';
 
-part 'auth_state.freezed.dart';
+enum AuthStatus { initial, loading, authenticated, unauthenticated, error }
 
-@freezed
-class AuthState with _$AuthState {
-  const factory AuthState.initial() = _Initial;
+class AuthState {
+  final AuthStatus status;
+  final AuthUser? user;
+  final String? errorMessage;
 
-  const factory AuthState.loading() = _Loading;
+  const AuthState({
+    this.status = AuthStatus.initial,
+    this.user,
+    this.errorMessage,
+  });
 
-  const factory AuthState.authenticated(AuthUser user) = _Authenticated;
+  const AuthState.initial() : this(status: AuthStatus.initial);
 
-  const factory AuthState.unauthenticated() = _Unauthenticated;
+  const AuthState.loading() : this(status: AuthStatus.loading);
 
-  const factory AuthState.error(String message) = _Error;
+  const AuthState.authenticated(AuthUser user)
+      : this(status: AuthStatus.authenticated, user: user);
+
+  const AuthState.unauthenticated() : this(status: AuthStatus.unauthenticated);
+
+  const AuthState.error(String message)
+      : this(status: AuthStatus.error, errorMessage: message);
 }

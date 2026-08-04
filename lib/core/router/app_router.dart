@@ -1,8 +1,8 @@
 import 'package:bankapp/features/configuration/presentation/screens/configuration_screen.dart';
 import 'package:bankapp/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:bankapp/features/home/presentation/screens/cards/cards_screen.dart';
-import 'package:bankapp/features/home/presentation/screens/reports/historial_screen.dart';
-import 'package:bankapp/features/home/presentation/screens/transfers/transferencias_screen.dart';
+import 'package:bankapp/features/transactions/presentation/screens/historial_screen.dart';
+import 'package:bankapp/features/transactions/presentation/screens/transferencias_screen.dart';
 import 'package:bankapp/features/authentication/presentation/screens/screens.dart';
 import 'package:bankapp/features/home/presentation/screens/screens.dart';
 import 'package:bankapp/features/authentication/presentation/state/auth_provider.dart';
@@ -14,8 +14,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
     initialLocation: '/',
-    redirect: (context, state) async {
-      final isLoggedIn = await ref.read(authRepositoryProvider).isLoggedIn();
+    redirect: (context, state) {
+      final isLoggedIn = ref.read(authRepositoryProvider).isLoggedIn();
 
       final currentPath = state.location;
 
