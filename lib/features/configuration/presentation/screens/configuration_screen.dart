@@ -47,9 +47,34 @@ class ConfigurationScreen extends ConsumerWidget {
           SwitchListTile(
             title: Text(l10n.notifications, style: textStyle),
             value: state.notificationsEnabled,
-            onChanged: (_) {
-              ref.read(configurationControllerProvider.notifier)
-                  .toggleNotifications();
+            onChanged: (enabled) async {
+              try {
+                final granted = await ref
+                    .read(configurationControllerProvider.notifier)
+                    .setNotificationsEnabled(enabled);
+
+                if (!context.mounted) return;
+
+                if (enabled && !granted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Chrome bloqueó el permiso. Habilítalo desde la configuración del sitio.',
+                      ),
+                    ),
+                  );
+                }
+              } catch (error) {
+                if (!context.mounted) return;
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'No se pudo registrar el dispositivo: $error',
+                    ),
+                  ),
+                );
+              }
             },
           ),
           const Divider(color: Colors.white24),

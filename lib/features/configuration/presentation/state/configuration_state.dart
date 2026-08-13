@@ -1,7 +1,7 @@
 class ConfigurationState {
   const ConfigurationState({
     this.isDarkMode = true,
-    this.notificationsEnabled = true,
+    this.notificationsEnabled = false,
   });
 
   final bool isDarkMode;

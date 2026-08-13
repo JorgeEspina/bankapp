@@ -115,7 +115,7 @@ class _HistorialScreenState extends ConsumerState<HistorialScreen> {
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(16),
-      itemCount: grouped.length + (state.hasMore ? 1 : 0),
+      itemCount: grouped.length + (state.isLoadingMore ? 1 : 0),
       itemBuilder: (context, index) {
         if (index == grouped.length) {
           return const Padding(

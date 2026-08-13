@@ -8,6 +8,7 @@ class TransactionsController extends Notifier<TransactionsState> {
 
   @override
   TransactionsState build() {
+    ref.watch(currentUserIdProvider);
     Future.microtask(() => loadTransactions());
     return const TransactionsState(isLoading: true);
   }
@@ -44,9 +45,12 @@ class TransactionsController extends Notifier<TransactionsState> {
   }
 
   Future<void> loadMore() async {
-    if (state.isLoading || !state.hasMore || state.lastDocument == null) return;
+    if (state.isLoading || state.isLoadingMore || !state.hasMore ||
+        state.lastDocument == null) {
+      return;
+    }
 
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoadingMore: true, error: null);
 
     try {
       final repository = ref.read(transactionsRepositoryProvider);
@@ -63,13 +67,13 @@ class TransactionsController extends Notifier<TransactionsState> {
 
       state = state.copyWith(
         transactions: [...state.transactions, ...result.transactions],
-        isLoading: false,
+        isLoadingMore: false,
         hasMore: result.transactions.length == _pageSize,
         lastDocument: result.lastDoc,
       );
     } catch (e) {
       state = state.copyWith(
-        isLoading: false,
+        isLoadingMore: false,
         error: 'Error al cargar más transacciones: $e',
       );
     }
