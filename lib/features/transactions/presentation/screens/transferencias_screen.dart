@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:bankapp/core/l10n/app_localizations.dart';
+import 'package:bankapp/core/notifications/notification_service.dart';
 
 import '../../data/models/transaction_model.dart';
 import '../state/transactions_providers.dart';
@@ -49,6 +50,16 @@ class _TransferenciasScreenState extends ConsumerState<TransferenciasScreen> {
       );
 
       await repository.addTransaction(transaction);
+
+      try {
+        await NotificationService.instance.showTransferConfirmation(
+          description: transaction.description,
+          amount: transaction.amount,
+        );
+      } catch (_) {
+        // La transferencia ya se guardó; una falla de notificación no debe
+        // reportarla como fallida ni provocar un registro duplicado.
+      }
 
       // Refrescar historial
       ref.read(transactionsControllerProvider.notifier).refresh();
